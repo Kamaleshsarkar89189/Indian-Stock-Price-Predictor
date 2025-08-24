@@ -17,7 +17,7 @@ list_of_files = [
     f"src/{project_name}/pipelines/__init__.py",
     f"src/{project_name}/pipelines/training_pipeline.py",
     f"src/{project_name}/pipelines/prediction_pipeline.py",
-    f"src/{project_name}/exceptions/.py",
+    f"src/{project_name}/exceptions.py",
     f"src/{project_name}/logger.py",
     f"src/{project_name}/utils.py",
     "main.py",
