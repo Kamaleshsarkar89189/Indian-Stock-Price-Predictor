@@ -6,4 +6,5 @@ scikit-learn
 seaborn
 xgboost
 flask
+yfinance==0.2.57
 #-e .
