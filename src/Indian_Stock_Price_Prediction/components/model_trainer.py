@@ -124,7 +124,7 @@ class ModelTrainer:
 					n_iter=self.config.n_iter,
 					cv=tscv,
 					scoring=self.config.scoring,
-					n_jobs=self.config.n_jobs,
+					n_jobs= 1,
 					random_state=self.config.random_state,
 					verbose=0,
 				)

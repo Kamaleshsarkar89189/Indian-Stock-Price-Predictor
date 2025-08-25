@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from typing import Dict, Any
 
-from src.Indian_Stock_Price_Prediction.components.data_ingestion import fetch_stock_data
+from src.Indian_Stock_Price_Prediction.components.data_ingestion import DataIngestion  
 from src.Indian_Stock_Price_Prediction.components.data_transformation import transform_data
 from src.Indian_Stock_Price_Prediction.components.model_trainer import ModelTrainer
 
@@ -13,8 +13,7 @@ def train_pipeline(
 	prediction_date: str,
 	lookback_days: int = 365,
 	test_size: float = 0.2,
-	prediction_days: int = 1,
-	scale: bool = True
+	prediction_days: int = 1
 ) -> Dict[str, Any]:
 	"""
 	Full training pipeline:
@@ -29,12 +28,18 @@ def train_pipeline(
 		"trained_models": Dict[str, estimator],
 		"test_predictions": Dict[str, np.ndarray],
 		"feature_names": list,
-		"scaler": fitted scaler or None,
+		"preprocessor": fitted ColumnTransformer,
 		"metadata": { "rows": int, "train_rows": int, "test_rows": int }
 	  }
 	"""
-	# 1) Fetch data
-	df = fetch_stock_data(ticker=ticker, prediction_date=prediction_date, lookback_days=lookback_days)
+	# 1) Fetch data using DataIngestion
+	ingestion = DataIngestion()
+	df = ingestion.fetch_stock_data(
+		ticker=ticker,
+		prediction_date=prediction_date,
+		lookback_days=lookback_days
+	)
+
 	if df is None or df.empty:
 		raise ValueError("No data returned from fetch_stock_data")
 
@@ -49,12 +54,11 @@ def train_pipeline(
 	test_df = df.iloc[split_idx:].reset_index(drop=True)
 
 	# 3) Transform (feature engineering + scaling)
-	X_train, X_test, y_train, y_test, scaler, feature_names = transform_data(
+	X_train, X_test, y_train, y_test, preprocessor, feature_names = transform_data(
 		train_df=train_df,
 		test_df=test_df,
 		target_col=None,
-		prediction_days=prediction_days,
-		scale=scale
+		prediction_days=prediction_days
 	)
 
 	# 4) Train and evaluate all models
@@ -68,7 +72,7 @@ def train_pipeline(
 		"trained_models": trained_models,
 		"test_predictions": test_predictions,
 		"feature_names": feature_names,
-		"scaler": scaler,
+		"preprocessor": preprocessor,
 		"best_params": best_params,
 		"metadata": {
 			"rows": int(len(df)),
@@ -79,6 +83,6 @@ def train_pipeline(
 
 if __name__ == "__main__":
 	# Example usage:
-	# result = train_pipeline("RELIANCE.NS", "2025-08-01", 365, 0.2, prediction_days=1, scale=True)
-	# print(result["performance"].head())
+	result = train_pipeline("RELIANCE.NS", "2025-08-01", 365, 0.2, prediction_days=1)
+	print(result["performance"].head())
 	pass

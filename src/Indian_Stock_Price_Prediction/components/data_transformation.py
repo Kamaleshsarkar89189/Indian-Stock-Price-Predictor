@@ -245,7 +245,33 @@ def transform_data(
 
 	return X_train_transformed, X_test_transformed, y_train, y_test, preprocessor, feature_names_out
 
+# if __name__ == "__main__":
+# 	# Example (requires train_df, test_df from your ingestion step)
+# 	# Xtr, Xte, ytr, yte, preproc, feat_names = transform_data(train_df, test_df, prediction_days=1)
+# 	pass
+
+
+
 if __name__ == "__main__":
-	# Example (requires train_df, test_df from your ingestion step)
-	# Xtr, Xte, ytr, yte, preproc, feat_names = transform_data(train_df, test_df, prediction_days=1)
-	pass
+	from data_ingestion import DataIngestion
+
+	ingestion = DataIngestion()
+	result = ingestion.get_data_with_split(
+		ticker='TCS.NS',
+		prediction_date='2024-01-20',
+		lookback_days=365,
+		test_size=0.2
+	)
+
+	X_train_df = result['X_train']
+	X_test_df = result['X_test']
+	y_train = result['y_train']
+	y_test = result['y_test']
+
+	X_train_transformed, X_test_transformed, y_train_out, y_test_out, preprocessor, feat_names = transform_data(
+		X_train_df, X_test_df, target_col='adj_close', prediction_days=1
+	)
+
+	print("Feature matrix shapes:")
+	print("Train:", X_train_transformed.shape)
+	print("Test:", X_test_transformed.shape)
