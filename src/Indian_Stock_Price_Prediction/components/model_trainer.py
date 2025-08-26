@@ -12,7 +12,7 @@ from sklearn.ensemble import (
 )
 from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from sklearn.model_selection import TimeSeriesSplit, RandomizedSearchCV
+from sklearn.model_selection import TimeSeriesSplit, GridSearchCV
 from sklearn.tree import DecisionTreeRegressor
 
 # Optional XGBoost (present in your original reference)
@@ -27,7 +27,6 @@ except Exception:
 class ModelTrainerConfig:
 	random_state: int = 42
 	cv_splits: int = 5
-	n_iter: int = 25
 	n_jobs: int = -1
 	scoring: str = "r2"  # maximize R2
 
@@ -67,41 +66,41 @@ class ModelTrainer:
 		return models
 
 	def _get_param_spaces(self):
+		"""Optimized parameter grids for GridSearchCV - balanced between thoroughness and speed"""
 		params = {
 			"Decision Tree": {
-				"max_depth": [None, 3, 5, 7, 10, 15, 20],
-				"min_samples_split": [2, 5, 10, 20],
-				"min_samples_leaf": [1, 2, 4, 8],
-			},
-			"Random Forest": {
-				"n_estimators": [100, 200, 300, 500],
-				"max_depth": [None, 5, 10, 15, 20],
+				"max_depth": [None, 5, 10],
 				"min_samples_split": [2, 5, 10],
 				"min_samples_leaf": [1, 2, 4],
 			},
+			"Random Forest": {
+				"n_estimators": [100, 200, 300],
+				"max_depth": [None, 10, 15],
+				"min_samples_split": [2, 5],
+				"min_samples_leaf": [1, 2],
+			},
 			"Gradient Boosting": {
-				"n_estimators": [100, 200, 300, 500],
-				"learning_rate": [0.01, 0.03, 0.05, 0.1],
-				"max_depth": [2, 3, 4, 5],
-				"subsample": [0.6, 0.75, 0.9],
+				"n_estimators": [200],
+				"learning_rate": [0.01],
+				"max_depth": [3, 5], 
+				"subsample": [0.8, 0.9],
 			},
 			"Linear Regression": {},
 			"Ridge Regression": {
-				"alpha": np.logspace(-3, 3, 20),
+				"alpha": [0.1, 1.0, 10.0, 100.0, 1000.0],
 			},
 			"AdaBoost Regressor": {
-				"n_estimators": [100, 200, 300, 500, 800],
-				"learning_rate": [0.01, 0.03, 0.05, 0.1],
+				"n_estimators": [50, 100, 200],
+				"learning_rate": [0.01, 0.1],
 			},
 		}
 		if _HAS_XGB:
 			params["XGBRegressor"] = {
-				"n_estimators": [300, 500, 800],
-				"learning_rate": [0.01, 0.03, 0.05, 0.1],
-				"max_depth": [3, 4, 6, 8],
-				"subsample": [0.6, 0.8, 1.0],
-				"colsample_bytree": [0.6, 0.8, 1.0],
-				"reg_lambda": [0.0, 0.5, 1.0, 2.0],
+				"n_estimators": [100, 200],
+				"learning_rate": [0.1, 0.2],
+				"max_depth": [3, 4, 6],
+				"subsample": [0.8, 1.0],
+				"colsample_bytree": [0.8, 1.0],
 			}
 		return params
 
@@ -115,25 +114,31 @@ class ModelTrainer:
 		test_predictions = {}
 		best_params = {}
 
+		print("Using GridSearchCV for hyperparameter tuning...")
+
 		for name, model in models.items():
+			print(f"Training {name}...")
 			search_space = param_spaces.get(name, {})
+			
 			if search_space:
-				search = RandomizedSearchCV(
+				# Use GridSearchCV with param_grid (not param_distributions)
+				search = GridSearchCV(
 					estimator=model,
-					param_distributions=search_space,
-					n_iter=self.config.n_iter,
+					param_grid=search_space,  # ✅ Correct parameter for GridSearchCV
 					cv=tscv,
 					scoring=self.config.scoring,
-					n_jobs= 1,
-					random_state=self.config.random_state,
+					n_jobs=1,  # Set to 1 to avoid potential issues
 					verbose=0,
 				)
 				search.fit(X_train, y_train)
 				best_model = search.best_estimator_
 				best_params[name] = search.best_params_
+				print(f"  Best params: {search.best_params_}")
 			else:
+				# No hyperparameters to tune (e.g., Linear Regression)
 				best_model = model.fit(X_train, y_train)
 				best_params[name] = {}
+				print(f"  No hyperparameters to tune")
 
 			y_pred = best_model.predict(X_test)
 			metrics = self.eval_metrics(y_test, y_pred)
@@ -144,6 +149,7 @@ class ModelTrainer:
 
 			trained_models[name] = best_model
 			test_predictions[name] = np.asarray(y_pred)
+			print(f"✅ {name} completed - R2: {metrics['R2']:.4f}, RMSE: {metrics['RMSE']:.4f}")
 
 		performance_df = pd.DataFrame(perf_rows).set_index("Model")
 		performance_df = performance_df.sort_values("R2", ascending=False)

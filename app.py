@@ -227,3 +227,4 @@ if run_button:
 
 else:
     st.info("Select a stock, adjust options if needed, and click '🚀 Run Analysis'.")
+

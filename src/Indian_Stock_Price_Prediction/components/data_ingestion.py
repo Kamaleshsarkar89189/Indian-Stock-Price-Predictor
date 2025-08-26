@@ -238,7 +238,7 @@ class DataIngestion:
         Dictionary containing all data splits and metadata
         """
         
-        print(f"Starting complete data pipeline for {ticker}...")
+        print(f"Starting complete data pipeline for {ticker}...") 
         
         # Step 1: Fetch raw data
         print("Step 1: Fetching stock data...")
