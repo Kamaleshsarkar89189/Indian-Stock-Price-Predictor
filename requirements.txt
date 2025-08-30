@@ -1,5 +1,5 @@
-numpy==1.24.3
-pandas==2.0.3
+# numpy==1.24.3
+# pandas==2.0.3
 matplotlib
 python-dotenv
 scikit-learn
@@ -8,5 +8,9 @@ xgboost
 flask
 plotly
 yfinance==0.2.65
-streamlit==1.45.1
+# streamlit==1.45.1
 catboost==1.2.8
+
+numpy>=1.26.0
+pandas>=2.1.0
+streamlit>=1.28.0
