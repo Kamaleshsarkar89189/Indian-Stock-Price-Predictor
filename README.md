@@ -77,10 +77,10 @@ src/
 
 ## 👤 Author
 
-**Piyush Agarwal**
+**Piyush Agarwal**  
 📌 *Learning • Building • Growing*
 
-🔗 [LinkedIn](https://linkedin.com/) | [GitHub](https://github.com/)
+🔗 [Streamlit App](https://indianstockpriceprediction.streamlit.app/) | [LinkedIn](https://linkedin.com/) | [GitHub](https://github.com/)
 
 ---
 
