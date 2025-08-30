@@ -1,5 +1,5 @@
-numpy==1.24.3
-pandas==2.0.3
+numpy==1.23.0
+pandas==1.5.0
 matplotlib
 python-dotenv
 scikit-learn
@@ -7,5 +7,7 @@ seaborn
 xgboost
 flask
 plotly
-yfinance==0.2.65
+#yfinance==0.2.65
 #-e .
+yfinance==2.65.0
+streamlit==1.20.0
