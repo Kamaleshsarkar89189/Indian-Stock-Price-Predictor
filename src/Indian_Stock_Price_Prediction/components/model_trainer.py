@@ -36,7 +36,7 @@ class ModelTrainer:
 		self.config = ModelTrainerConfig()
 
 	def eval_metrics(self, actual, pred):
-		rmse = mean_squared_error(actual, pred, squared=False)
+		rmse = np.sqrt(mean_squared_error(actual, pred))
 		mae = mean_absolute_error(actual, pred)
 		r2 = r2_score(actual, pred)
 		mse = rmse**2
