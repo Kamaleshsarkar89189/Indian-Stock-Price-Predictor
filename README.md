@@ -215,7 +215,7 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 ## 👤 Author
 
-**Piyush Agarwal**
+**Kamalesh Sarkar**
 📌 *Learning • Building • Growing*
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?logo=linkedin&logoColor=white)](https://linkedin.com/in/piyushagarwalcs)
