@@ -17,7 +17,7 @@
 
 ## 🚀 Live Demo
 
-🔗 **[https://indianstockpriceprediction.streamlit.app/](https://indianstockpriceprediction.streamlit.app/)**
+🔗 **https://indian-stock-price-predictor.streamlit.app/**
 
 ---
 
