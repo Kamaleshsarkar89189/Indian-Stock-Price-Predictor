@@ -17,7 +17,7 @@
 
 ## 🚀 Live Demo
 
-🔗 **[https://indianstockpriceprediction.streamlit.app/](https://indianstockpriceprediction.streamlit.app/)**
+🔗 **https://indian-stock-price-predictor.streamlit.app/**
 
 ---
 
@@ -215,11 +215,11 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 ## 👤 Author
 
-**Piyush Agarwal**
+**Kamalesh Sarkar**
 📌 *Learning • Building • Growing*
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?logo=linkedin&logoColor=white)](https://linkedin.com/in/piyushagarwalcs)
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?logo=github&logoColor=white)](https://github.com/PiyushAgarwalcs)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?logo=linkedin&logoColor=white)](https://linkedin.com/in/kamalesh-sarkar-341a48299)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?logo=github&logoColor=white)](https://github.com/Kamaleshsarkar89189)
 
 ---
 
